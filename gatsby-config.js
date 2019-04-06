@@ -2,6 +2,7 @@ module.exports = {
   siteMetadata: {
     title: 'NFCA NCAA Division 1 Softball Polls',
   },
+  pathPrefix: "/nfca-polls",
   plugins: [
     'gatsby-plugin-react-helmet',
     'gatsby-transformer-json',
