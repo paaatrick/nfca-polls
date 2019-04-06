@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/pages/index.js"],"names":["__webpack_require__","r","__webpack_exports__"],"mappings":"0FAAAA,EAAAC,EAAAC,GAAAF,EAAA,GAEeE,EAAA,yBAAM","file":"component---src-pages-index-js-49e173ed139415927d7b.js","sourcesContent":["import React from 'react';\n\nexport default () => 'redirecting...';\n"],"sourceRoot":""}
