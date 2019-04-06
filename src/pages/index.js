@@ -3,7 +3,7 @@ import { graphql } from 'gatsby';
 import { Redirect } from '@reach/router';
 
 const Index = ({ data }) => (
-  <Redirect to={`/${data.allRankingsJson.edges[0].node.year}`} noThrow />
+  <Redirect to={`${data.allRankingsJson.edges[0].node.year}`} noThrow />
 );
 
 export default Index;

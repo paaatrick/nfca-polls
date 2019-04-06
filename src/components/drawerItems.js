@@ -43,7 +43,7 @@ class DrawerItems extends React.Component {
                         <ListItem
                           button
                           key={year}
-                          selected={!!location.pathname.match(`^/${year}/?$`)}
+                          selected={!!location.pathname.match(`/${year}/?$`)}
                           component={props => (
                             <Link to={`/${year}`} {...props} />
                           )}
