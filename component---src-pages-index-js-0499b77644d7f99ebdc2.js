@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{144:function(n,e,r){"use strict";r.r(e),r.d(e,"query",function(){return u});var a=r(0),t=r.n(a),o=r(17);e.default=function(n){var e=n.data;return t.a.createElement(o.Redirect,{to:""+e.allRankingsJson.edges[0].node.year,noThrow:!0})};var u="3536972026"}}]);
+//# sourceMappingURL=component---src-pages-index-js-0499b77644d7f99ebdc2.js.map
