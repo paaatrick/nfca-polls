@@ -21,7 +21,7 @@ const limiter = new Bottleneck({
     minTime: 500
 });
 
-const startYear = 2014;
+const startYear = 2019;
 const endYear = 2019;
 
 const fetchWeek = (year, num) => {
