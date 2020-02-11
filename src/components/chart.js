@@ -52,6 +52,7 @@ class Chart extends React.Component {
     const spacing = {
       week: 50,
       rank: 30,
+      tie: 15,
     };
     const lines = {
       width: spacing.week * (weeks.length - 1),
@@ -201,20 +202,36 @@ class Chart extends React.Component {
       .attr('r', marker.size / 2)
       .attr('stroke-width', 3);
 
+    const getLatestRank = (d, idx) => {
+      const chronoRanks = [...d.ranks].reverse();
+      const latestIdx = chronoRanks.findIndex(i => i.value);
+      return [{
+        x: chronoRanks[latestIdx].week,
+        y: chronoRanks[latestIdx].value,
+        team: d.team,
+        current: latestIdx === 0,
+      }]
+    };
+    const latestRanks = data.map(getLatestRank);
+
     group
       .selectAll('text')
-      .data(d => [d])
+      .data(getLatestRank)
       .enter()
       .append('text')
-      .attr(
-        'x',
-        d => x([...d.ranks].reverse().find(i => i.value).week) + labels.padding
-      )
-      .attr('y', d => y([...d.ranks].reverse().find(i => i.value).value))
+      .attr('x', d => x(d.x) + labels.padding)
+      .attr('y', d => {
+        const ties = latestRanks.filter(other => other[0].x === d.x && other[0].y === d.y);
+        const tieCount = ties.length;
+        let offset = 0;
+        if (tieCount > 1) {
+          const tieRank = ties.findIndex(other => other[0].team === d.team);
+          offset = (tieRank - ((tieCount - 1) / 2)) * spacing.tie;
+        }
+        return y(d.y) + offset;
+      })
       .attr('alignment-baseline', 'middle')
-      .attr('visibility', d =>
-        [...d.ranks].reverse().findIndex(i => i.value) > 0 ? 'hidden' : null
-      )
+      .attr('visibility', d =>  d.current ? null : 'hidden')
       .text(d => d.team);
   }
 
