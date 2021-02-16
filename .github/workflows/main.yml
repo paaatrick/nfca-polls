@@ -1,29 +1,29 @@
 name: Update data
 
-on:
-  schedule:
-    - cron: '0 14 * * 2'
+on: workflow_dispatch
+  # schedule:
+  #   - cron: '0 14 * * 2'
 
-#jobs:
-#  update:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: Checkout repo
-#      uses: actions/checkout@v2
-#    - name: Setup Node.js
-#      uses: actions/setup-node@v1.1.0
-#    - name: Install dependencies
-#      run: npm install
-#    - name: Fetch data
-#      run: node bin/scrape.js
-#    - name: Commit files
-#      run: |
-#        git config --local user.email "action@github.com"
-#        git config --local user.name "GitHub Action"
-#        git commit -a -m "Update data"
-#    - name: Push changes
-#      uses: ad-m/github-push-action@master
-#      with:
-#        github_token: ${{ secrets.GITHUB_TOKEN }}
-#    - name: Deploy
-#      run: npm run deploy
+jobs:
+ update:
+   runs-on: ubuntu-latest
+   steps:
+   - name: Checkout repo
+     uses: actions/checkout@v2
+   - name: Setup Node.js
+     uses: actions/setup-node@v1.1.0
+   - name: Install dependencies
+     run: npm install
+   - name: Fetch data
+     run: node bin/scrape.js
+   - name: Commit files
+     run: |
+       git config --local user.email "action@github.com"
+       git config --local user.name "GitHub Action"
+       git commit -a -m "Update data"
+   - name: Push changes
+     uses: ad-m/github-push-action@master
+     with:
+       github_token: ${{ secrets.GITHUB_TOKEN }}
+   - name: Deploy
+     run: npm run deploy
