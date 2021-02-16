@@ -21,8 +21,8 @@ const limiter = new Bottleneck({
     minTime: 500
 });
 
-const startYear = 2020;
-const endYear = 2020;
+const startYear = 2021;
+const endYear = 2021;
 
 const fetchWeek = (year, num) => {
   const url = `https://nfca.org/component/com_nfca/list,1/pdiv,div1/pnum,${num}/top25,1/year,${year}/`;
