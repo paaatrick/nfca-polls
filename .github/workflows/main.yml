@@ -17,16 +17,16 @@ jobs:
        registry-url: 'https://registry.npmjs.org'
    - name: Install dependencies
      run: npm ci
-#   - name: Fetch data
-#     run: node bin/scrape.js
-#   - name: Commit files
-#     run: |
-#       git config --local user.email "action@github.com"
-#       git config --local user.name "GitHub Action"
-#       git commit -a -m "Update data"
-#   - name: Push changes
-#     uses: ad-m/github-push-action@master
-#     with:
-#       github_token: ${{ secrets.GITHUB_TOKEN }}
-#   - name: Deploy
-#     run: npm run deploy
+   - name: Fetch data
+     run: node bin/scrape.js
+   - name: Commit files
+     run: |
+       git config --local user.email "action@github.com"
+       git config --local user.name "GitHub Action"
+       git commit -a -m "Update data"
+   - name: Push changes
+     uses: ad-m/github-push-action@master
+     with:
+       github_token: ${{ secrets.GITHUB_TOKEN }}
+   - name: Deploy
+     run: npm run deploy
