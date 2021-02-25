@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[2],{145:function(n,e,i){"use strict";i.r(e);i(0);e.default=function(){return"redirecting..."}}}]);
+//# sourceMappingURL=component---src-pages-index-js-c4dc73dc44cef127f600.js.map
