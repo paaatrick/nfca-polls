@@ -5,12 +5,15 @@ import { scaleLinear, scalePoint } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { line } from 'd3-shape';
 import { Typography } from '@material-ui/core';
+import camelCase from 'lodash.camelcase';
+
+import styles from './chart.module.css';
 
 const handleMouseOver = function(d) {
-  selectAll('.bump')
+  selectAll('.' + styles.bump)
     .sort(a => (a.team === d.team ? 1 : -1)) // pop this group to the top
-    .classed('disabled', true);
-  select(this).classed('disabled', false);
+    .classed(styles.disabled, true);
+  select(this).classed(styles.disabled, false);
   select(this)
     .select('text')
     .attr('visibility', null)
@@ -18,7 +21,7 @@ const handleMouseOver = function(d) {
 };
 
 const handleMouseOut = function(d) {
-  selectAll('.bump').classed('disabled', false);
+  selectAll('.' + styles.bump).classed(styles.disabled, false);
   select(this)
     .select('text')
     .attr(
@@ -38,7 +41,15 @@ const getWeek = (description, index) => {
   return `Week ${index}`;
 };
 
-const toClassName = str => str.toLowerCase().replace(/\W/g, '-');
+const toClassName = str => {
+  const key = camelCase(str);
+  const className = styles[key];
+  if (!className) {
+    console.warn('No style for ' + key);
+    return '';
+  }
+  return className;
+}
 
 class Chart extends React.Component {
   constructor(props) {
@@ -162,11 +173,11 @@ class Chart extends React.Component {
       .y(d => y(d.value));
 
     const group = chart
-      .selectAll('g.bump')
+      .selectAll(`g.${styles.bump}`)
       .data(data)
       .enter()
       .append('g')
-      .attr('class', d => `bump ${toClassName(d.team)}`)
+      .attr('class', d => `${styles.bump} ${toClassName(d.team)}`)
       .on('mouseover', handleMouseOver)
       .on('mouseout', handleMouseOut);
 
