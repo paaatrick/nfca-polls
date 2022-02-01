@@ -35,7 +35,8 @@
     "bottleneck": "^2.17.1",
     "gh-pages": "^2.0.1",
     "prettier": "^1.16.4",
-    "x-ray": "^2.3.3"
+    "x-ray": "^2.3.3",
+    "yargs": "^17.3.1"
   },
   "repository": {
     "type": "git",

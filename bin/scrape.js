@@ -2,6 +2,12 @@ const fs = require('fs');
 const Bottleneck = require('bottleneck');
 const Xray = require('x-ray');
 
+const currentYear = (new Date()).getFullYear()
+const argv = require('yargs/yargs')(process.argv.slice(2))
+  .default('startYear', currentYear)
+  .default('endYear', currentYear)
+  .argv;
+
 const x = Xray({
     filters: {
         split: value => value.split(', '),
@@ -21,9 +27,6 @@ const limiter = new Bottleneck({
     minTime: 500
 });
 
-const startYear = 2021;
-const endYear = 2021;
-
 const fetchWeek = (year, num) => {
   const url = `https://nfca.org/component/com_nfca/list,1/pdiv,div1/pnum,${num}/top25,1/year,${year}/`;
   console.log(url);
@@ -40,7 +43,7 @@ const fetchWeek = (year, num) => {
 }
 
 const loop = async () => {
-  for (let year = startYear; year <= endYear; year++) {
+  for (let year = argv.startYear; year <= argv.endYear; year++) {
     let week = 1;
     const yearData = []
     while (true) {
