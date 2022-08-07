@@ -11,6 +11,8 @@ jobs:
    steps:
    - name: Checkout repo
      uses: actions/checkout@v2
+     width:
+       ref: ${{ github.head_ref }}
    - name: Setup Node.js
      uses: actions/setup-node@v2
      with:
@@ -21,18 +23,16 @@ jobs:
    - name: Fetch data
      run: node bin/scrape.js
    - name: Commit files
-     run: |
-       git config --local user.email "action@github.com"
-       git config --local user.name "GitHub Action"
-       git commit -a -m "Update data"
-   - name: Push changes
-     uses: ad-m/github-push-action@master
+     id: auto-commit-action
+     uses: stefanzweifel/git-auto-commit-action@v4
      with:
-       github_token: ${{ secrets.GITHUB_TOKEN }}
+       commit_message: Update data
    - name: Build
+     if: steps.auto-commit-action.outputs.changes_detected == 'true'
      run: npm run build
    - name: Deploy
      uses: peaceiris/actions-gh-pages@v3
+     if: steps.auto-commit-action.outputs.changes_detected == 'true'
      with:
        github_token: ${{ secrets.GITHUB_TOKEN }}
        publish_dir: ./public
