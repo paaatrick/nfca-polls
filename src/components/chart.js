@@ -4,7 +4,6 @@ import { select, selectAll } from 'd3-selection';
 import { scaleLinear, scalePoint } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { line } from 'd3-shape';
-import { Typography } from '@material-ui/core';
 import camelCase from 'lodash.camelcase';
 
 import styles from './chart.module.css';
@@ -258,14 +257,7 @@ class Chart extends React.Component {
 
   render() {
     return (
-      <Typography
-        variant='body2'
-        align='center'
-        component='div'
-        style={{ overflowX: 'auto' }}
-      >
-        <svg ref={this.chartRef} />
-      </Typography>
+      <svg ref={this.chartRef} />
     );
   }
 }
