@@ -1,21 +1,27 @@
 import { Navbar as Navbar_, NavLink } from '@mantine/core'
 import { useRouter } from 'next/router'
+import About from './About'
 
 export default function Navbar({ years, hidden }) {
   const router = useRouter()
   return (
-    <Navbar_ width={{ sm: 200 }} hiddenBreakpoint="sm" hidden={hidden}>
-      {years.map(year => (
-        <NavLink 
-          key={year} 
-          component="a" 
-          href={year} 
-          label={year}
-          p="md" 
-          active={router.asPath === `/${year}`}
-          variant='filled'
-        />
-      ))}
+    <Navbar_ width={{ sm: 150, md: 275 }} hiddenBreakpoint="sm" hidden={hidden}>
+      <Navbar_.Section grow>
+        {years.map(year => (
+          <NavLink 
+            key={year} 
+            component="a" 
+            href={year} 
+            label={year}
+            p="md" 
+            active={router.asPath === `/${year}`}
+            variant='filled'
+          />
+        ))}
+      </Navbar_.Section>
+      <Navbar_.Section>
+        <About />
+      </Navbar_.Section>
     </Navbar_>
   )
 }
