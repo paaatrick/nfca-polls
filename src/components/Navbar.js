@@ -1,6 +1,7 @@
 import { Navbar as Navbar_, NavLink } from '@mantine/core'
 import { useRouter } from 'next/router'
 import About from './About'
+import Link from 'next/link'
 
 export default function Navbar({ years, hidden }) {
   const router = useRouter()
@@ -10,11 +11,11 @@ export default function Navbar({ years, hidden }) {
         {years.map(year => (
           <NavLink 
             key={year} 
-            component="a" 
+            component={Link}
             href={year} 
             label={year}
             p="md" 
-            active={router.asPath === `/${year}`}
+            active={router.asPath === `/${year}/`}
             variant='filled'
           />
         ))}

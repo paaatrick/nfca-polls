@@ -49,7 +49,7 @@ export default function Year({ data, years }) {
         main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
       })}
     >
-      <Chart rankings={data} />
+      <Chart rankings={data} key={data.year} />
     </AppShell>
   )
 }
