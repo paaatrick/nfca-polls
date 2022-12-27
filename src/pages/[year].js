@@ -1,7 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path'
 import { useState } from 'react';
-import Chart from '../components/chart';
+import Chart from '../components/Chart';
 import { AppShell } from '@mantine/core';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
@@ -49,7 +49,7 @@ export default function Year({ data, years }) {
         main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
       })}
     >
-      <Chart rankings={data} key={data.year} />
+      <Chart rankings={data} />
     </AppShell>
   )
 }
