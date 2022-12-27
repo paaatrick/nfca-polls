@@ -17,7 +17,15 @@ export default function App(props) {
         withNormalizeCSS
         theme={{
           colorScheme: 'light',
-          primaryColor: 'teal'
+          primaryColor: 'teal',
+          globalStyles: (theme) => ({
+            '.y.axis .domain': { 
+              stroke: 'none' 
+            },
+            '.y.axis .tick line': {
+              stroke: theme.colors.gray[4]
+            }
+          })
         }}
       >
         <Component {...pageProps} />
