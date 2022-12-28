@@ -8,7 +8,7 @@ import camelCase from 'lodash.camelcase';
 
 import styles from './Chart.module.css';
 
-const handleMouseOver = function(d) {
+const handleMouseOver = function(evt, d) {
   selectAll('.' + styles.bump)
     .sort(a => (a.team === d.team ? 1 : -1)) // pop this group to the top
     .classed(styles.disabled, true);
@@ -19,7 +19,7 @@ const handleMouseOver = function(d) {
     .attr('style', 'font-weight: bold;');
 };
 
-const handleMouseOut = function(d) {
+const handleMouseOut = function(evt, d) {
   selectAll('.' + styles.bump).classed(styles.disabled, false);
   select(this)
     .select('text')
