@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { select, selectAll } from 'd3-selection';
 import { scaleLinear, scalePoint } from 'd3-scale';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { line } from 'd3-shape';
-import { Typography } from '@material-ui/core';
 import camelCase from 'lodash.camelcase';
 
-import styles from './chart.module.css';
+import styles from './Chart.module.css';
 
-const handleMouseOver = function(d) {
+const handleMouseOver = function(evt, d) {
   selectAll('.' + styles.bump)
     .sort(a => (a.team === d.team ? 1 : -1)) // pop this group to the top
     .classed(styles.disabled, true);
@@ -20,7 +19,7 @@ const handleMouseOver = function(d) {
     .attr('style', 'font-weight: bold;');
 };
 
-const handleMouseOut = function(d) {
+const handleMouseOut = function(evt, d) {
   selectAll('.' + styles.bump).classed(styles.disabled, false);
   select(this)
     .select('text')
@@ -51,13 +50,14 @@ const toClassName = str => {
   return className;
 }
 
-class Chart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.chartRef = React.createRef();
-  }
+export default function Chart({ rankings }) {
+  useEffect(() => {
+    draw(rankings.data)
+  }, [rankings]);
 
-  draw(polls) {
+  const chartRef = useRef(null);
+
+  function draw(polls) {
     const weeks = polls.map(poll => poll.data.description).map(getWeek);
 
     const spacing = {
@@ -100,9 +100,10 @@ class Chart extends React.Component {
       height: margin.top + lines.height + axis.x.padding + margin.bottom,
     };
 
-    const svg = select(this.chartRef.current)
+    const svg = select(chartRef.current)
       .attr('width', element.width)
       .attr('height', element.height);
+    svg.selectAll('*').remove()
 
     const chart = svg
       .append('g')
@@ -246,28 +247,7 @@ class Chart extends React.Component {
       .text(d => d.team);
   }
 
-  componentDidMount() {
-    this.draw(this.props.rankings.data);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.rankings.year !== prevProps.rankings.year) {
-      this.draw(this.props.rankings.data);
-    }
-  }
-
-  render() {
-    return (
-      <Typography
-        variant='body2'
-        align='center'
-        component='div'
-        style={{ overflowX: 'auto' }}
-      >
-        <svg ref={this.chartRef} />
-      </Typography>
-    );
-  }
+  return (
+    <svg ref={chartRef} />
+  );
 }
-
-export default Chart;
