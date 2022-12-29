@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router'
 import Chart from '../components/Chart';
 import { AppShell, Box } from '@mantine/core';
 import Header from '../components/Header';
@@ -28,6 +29,16 @@ export async function getStaticProps({ params }) {
 
 export default function Year({ data, years }) {
   const [opened, setOpened] = useState(false);
+  const router = useRouter()
+
+  useEffect(() => {
+    const handleRouteChange = () => setOpened(false)
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    return () => router.events.off('routeChangeStart', handleRouteChange)
+  }, [])
+
   return (
     <AppShell
       padding="md"
