@@ -242,7 +242,7 @@ export default function Chart({ rankings }) {
         }
         return y(d.y) + offset;
       })
-      .attr('alignment-baseline', 'middle')
+      .attr('dominant-baseline', 'middle')
       .attr('visibility', d =>  d.current ? null : 'hidden')
       .text(d => d.team);
   }
