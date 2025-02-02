@@ -1,6 +1,7 @@
 {
   "name": "nfca-polls",
   "private": true,
+  "type": "module",
   "description": "NFCA NCAA Division 1 Softball Polls",
   "version": "0.1.0",
   "license": "MIT",
@@ -28,9 +29,9 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "bottleneck": "^2.17.1",
+    "cheerio": "^1.0.0",
+    "p-throttle": "^7.0.0",
     "prettier": "^1.16.4",
-    "x-ray": "^2.3.3",
     "yargs": "^17.3.1"
   },
   "repository": {

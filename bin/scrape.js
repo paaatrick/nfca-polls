@@ -1,64 +1,102 @@
-const fs = require('fs');
-const Bottleneck = require('bottleneck');
-const Xray = require('x-ray');
+import { writeFile } from 'node:fs/promises';
 
-const currentYear = (new Date()).getFullYear()
-const argv = require('yargs/yargs')(process.argv.slice(2))
+import * as cheerio from 'cheerio';
+import pThrottle from 'p-throttle';
+import yargs from 'yargs';
+
+const currentYear = new Date().getFullYear();
+const argv = yargs(process.argv.slice(2))
   .default('startYear', currentYear)
-  .default('endYear', currentYear)
-  .argv;
+  .default('endYear', currentYear).argv;
 
-const x = Xray({
-    filters: {
-        split: value => value.split(', '),
-        parse: value => (value
-            .map(item => item.match(/((?:.(?!\())+) \((\d+)\)/))
-            .map(matches => (matches && {
-                team: matches[1],
-                points: parseInt(matches[2])
-            }))
-        ),
-        int: value => value && parseInt(value),
-        name: value => value && value.match(/(?:.(?!\())+/)[0]
-    }
+const throttle = pThrottle({
+  limit: 1,
+  interval: 2000,
 });
 
-const limiter = new Bottleneck({
-    minTime: 500
-});
-
-const fetchWeek = (year, num) => {
-  const url = `https://nfca.org/component/com_nfca/list,1/pdiv,div1/pnum,${num}/top25,1/year,${year}/`;
+const getPage = throttle((year, pollNumber) => {
+  const url = `https://nfca.org/component/com_nfca/list,1/pdiv,div1/pnum,${pollNumber}/top25,1/year,${year}/`;
   console.log(url);
-  return x(url, {
-    description: 'h2',
-    top25: x('.list tr', [{
-      rank: 'td:nth-child(1) | int',
-      team: 'td:nth-child(2) | name',
-      record: 'td:nth-child(3)',
-      points: 'td:nth-child(4) | int'
-    }]),
-    receivingVotes: '.list + h3 + p | split | parse',
-  }).then(i => i);
-}
+  return cheerio.fromURL(url);
+});
 
-const loop = async () => {
-  for (let year = argv.startYear; year <= argv.endYear; year++) {
-    let week = 1;
-    const yearData = []
-    while (true) {
-      const data = await limiter.schedule(() => fetchWeek(year, week));
-      if (!data.top25.length) {
-        break;
-      }
-      yearData.push({ week, data });
-      week += 1;
-    }
-    fs.writeFileSync(
-      `${__dirname}/../data/rankings/${year}.json`,
-      JSON.stringify({ year, data: yearData })
-    )
+const getPollNumbers = $ => {
+  const $header = $('h2:contains("All Polls")');
+  if ($header.length === 0) {
+    throw new Error('Cannot find All Polls section');
   }
-}
+  return $header
+    .nextUntil('h2')
+    .map((_, el) => $(el).text())
+    .toArray();
+};
 
-loop();
+const getRankingData = $ => {
+  const textAsInt = el => {
+    const text = $(el).text();
+    return text ? parseInt(text) : undefined;
+  };
+
+  return $.extract({
+    description: 'h2',
+    receivingVotes: {
+      selector: '.list + h3 + p',
+      value: el =>
+        $(el)
+          .text()
+          .split(',')
+          .map(item => item.trim().match(/((?:.(?!\())+) \((\d+)\)/))
+          .filter(m => m != null)
+          .map(matches => ({
+            team: matches[1],
+            points: parseInt(matches[2]),
+          })),
+    },
+    top25: [
+      {
+        selector: '.list tr:has(td)',
+        value: {
+          rank: {
+            selector: 'td:nth-child(1)',
+            value: textAsInt,
+          },
+          team: {
+            selector: 'td:nth-child(2)',
+            value: el =>
+              $(el)
+                .text()
+                .match(/(?:.(?!\())+/)[0],
+          },
+          record: 'td:nth-child(3)',
+          points: {
+            selector: 'td:nth-child(4)',
+            value: textAsInt,
+          },
+        },
+      },
+    ],
+  });
+};
+
+(async () => {
+  for (let year = argv.startYear; year <= argv.endYear; year++) {
+    const start = '1';
+    let $ = await getPage(year, start);
+
+    const allPollNumbers = getPollNumbers($);
+
+    const yearData = [];
+    for (const pollNumber of allPollNumbers) {
+      if (pollNumber !== start) {
+        $ = await getPage(year, pollNumber);
+      }
+      const data = getRankingData($);
+      yearData.push({ week: parseInt(pollNumber), data });
+    }
+
+    await writeFile(
+      `${import.meta.dirname}/../data/rankings/${year}.json`,
+      JSON.stringify({ year, data: yearData })
+    );
+  }
+})();
