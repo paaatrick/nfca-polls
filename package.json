@@ -1,7 +1,6 @@
 {
   "name": "nfca-polls",
   "private": true,
-  "type": "module",
   "description": "NFCA NCAA Division 1 Softball Polls",
   "version": "0.1.0",
   "license": "MIT",
