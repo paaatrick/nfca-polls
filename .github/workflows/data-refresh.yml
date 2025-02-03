@@ -32,6 +32,8 @@ jobs:
    - name: Build
      if: steps.auto-commit-action.outputs.changes_detected == 'true'
      run: npm run build
+     env:
+       NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.GA_MEASUREMENT_ID }}
 
    - name: Deploy
      uses: peaceiris/actions-gh-pages@v4
