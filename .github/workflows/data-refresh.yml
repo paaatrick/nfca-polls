@@ -21,7 +21,7 @@ jobs:
      run: npm ci
 
    - name: Fetch data
-     run: node bin/scrape.js
+     run: node bin/scrape.mjs
 
    - name: Commit files
      id: auto-commit-action
